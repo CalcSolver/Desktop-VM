@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FreeDOS WebAssembly VM</title>
+  <title>Browser VM</title>
   <style>
     body {
       margin: 0;
@@ -29,24 +29,12 @@
       background: #000000;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       cursor: pointer;
-      position: relative;
+      width: 640px;
+      height: 400px;
     }
 
-    #screen_container canvas {
+    canvas {
       display: block;
-    }
-
-    #status {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      color: #00ff00;
-      font-family: monospace;
-      font-size: 14px;
-      background: rgba(0, 0, 0, 0.8);
-      padding: 4px 8px;
-      pointer-events: none;
-      z-index: 10;
     }
 
     .instructions {
@@ -55,54 +43,37 @@
       color: #aaa;
     }
   </style>
-  <script src="https://copy.sh/v86/build/libv86.js"></script>
+  <!-- Official v86 Build Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
 </head>
 <body>
 
-  <h1>FreeDOS WebAssembly VM</h1>
+  <h1>WebAssembly Desktop VM</h1>
   
-  <div id="screen_container">
-    <div id="status">Loading VM engine...</div>
-  </div>
+  <div id="screen_container"></div>
 
-  <p class="instructions">Click inside the screen to capture keyboard controls.</p>
+  <p class="instructions">Click inside the canvas to capture keyboard and mouse controls.</p>
 
   <script>
-    window.addEventListener("load", function() {
-      var status = document.getElementById("status");
-
-      try {
-        // Detect whether the script loaded V86 or V86Starter
-        var VMConstructor = typeof V86 !== "undefined" ? V86 : V86Starter;
-
-        var emulator = new VMConstructor({
-          wasm_path: "https://copy.sh/v86/build/v86.wasm",
-          memory_size: 64 * 1024 * 1024,
-          vga_memory_size: 4 * 1024 * 1024,
-          screen_container: document.getElementById("screen_container"),
-          bios: {
-            url: "https://copy.sh/v86/bios/seabios.bin",
-          },
-          vga_bios: {
-            url: "https://copy.sh/v86/bios/vgabios.bin",
-          },
-          fda: {
-            url: "./freedos722.img",
-          },
-          autostart: true,
-        });
-
-        emulator.add_listener("emulator-ready", function() {
-          status.innerText = "Booting FreeDOS...";
-          setTimeout(function() {
-            status.style.display = "none";
-          }, 3000);
-        });
-
-      } catch (err) {
-        status.style.color = "#ff4444";
-        status.innerText = "Error: " + err.message;
-      }
+    window.addEventListener("DOMContentLoaded", function() {
+      // jsDelivr serves proper CORS headers for GitHub Pages
+      var emulator = new V86Starter({
+        wasm_path: "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm",
+        memory_size: 32 * 1024 * 1024,
+        vga_memory_size: 2 * 1024 * 1024,
+        screen_container: document.getElementById("screen_container"),
+        bios: {
+          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin",
+        },
+        vga_bios: {
+          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin",
+        },
+        // Lightweight Linux kernel image hosted with CORS enabled
+        bzimage: {
+          url: "https://cdn.jsdelivr.net/gh/copy/v86@master/images/buildroot-bzImage.bin",
+        },
+        autostart: true,
+      });
     });
   </script>
 
