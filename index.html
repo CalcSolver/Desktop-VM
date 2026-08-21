@@ -29,9 +29,14 @@
       background: #000000;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       cursor: pointer;
+      width: 640px;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    #screen_container canvas {
+    canvas {
       display: block;
     }
 
@@ -41,40 +46,42 @@
       color: #aaa;
     }
   </style>
-  <script src="https://unpkg.com/v86/build/libv86.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
 </head>
 <body>
 
   <h1>FreeDOS WebAssembly VM</h1>
   
   <div id="screen_container">
-    <div style="white-space: pre; font-family: monospace; padding: 20px; color: #00ff00;">Booting FreeDOS...</div>
+    <div id="loading" style="font-family: monospace; color: #00ff00;">Starting FreeDOS...</div>
   </div>
 
-  <p class="instructions">Click inside the screen to control the VM.</p>
+  <p class="instructions">Click inside the screen to capture mouse and keyboard controls.</p>
 
   <script>
-    window.onload = function() {
-      var emulator = new V86({
-        wasm_path: "https://unpkg.com/v86/build/v86.wasm",
+    window.addEventListener("DOMContentLoaded", function() {
+      var emulator = new V86Starter({
+        wasm_path: "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm",
         memory_size: 64 * 1024 * 1024,
         vga_memory_size: 4 * 1024 * 1024,
         screen_container: document.getElementById("screen_container"),
         bios: {
-          url: "https://unpkg.com/v86/bios/seabios.bin",
+          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin",
         },
         vga_bios: {
-          url: "https://unpkg.com/v86/bios/vgabios.bin",
+          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin",
         },
-        
-        // Using unpkg CDN to bypass CORS issues
         fda: {
-          url: "https://unpkg.com/v86/images/freedos720.img",
+          url: "./freedos720.img",
         },
-        
         autostart: true,
       });
-    };
+
+      emulator.add_listener("emulator-ready", function() {
+        var loadingElem = document.getElementById("loading");
+        if (loadingElem) loadingElem.style.display = "none";
+      });
+    });
   </script>
 
 </body>
