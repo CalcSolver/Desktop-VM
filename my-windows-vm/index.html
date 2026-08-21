@@ -3,53 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browser VM</title>
+  <title>FreeDOS WebAssembly VM</title>
   <style>
     body {
       margin: 0;
-      background-color: #111;
-      color: #fff;
-      font-family: sans-serif;
+      padding: 0;
+      background-color: #121212;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
     }
+
+    h1 {
+      margin-bottom: 16px;
+      font-size: 1.5rem;
+    }
+
     #screen_container {
-      border: 2px solid #444;
-      background: #000;
+      border: 2px solid #333333;
+      border-radius: 4px;
+      background: #000000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       cursor: pointer;
     }
-    /* Style for canvas rendered by v86 */
+
     #screen_container canvas {
       display: block;
     }
+
+    .instructions {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
   </style>
-  <!-- Load v86 library from CDN -->
+  <!-- Load v86 emulator core from CDN -->
   <script src="https://unpkg.com/v86/build/libv86.js"></script>
 </head>
 <body>
 
-  <h2>Browser Windows VM</h2>
+  <h1>FreeDOS WebAssembly VM</h1>
+  
   <div id="screen_container">
-    <div style="white-space: pre; font-family: monospace;">Loading VM...</div>
+    <div style="white-space: pre; font-family: monospace; padding: 20px; color: #00ff00;">Initializing FreeDOS...</div>
   </div>
+
+  <p class="instructions">Click inside the screen to capture mouse and keyboard input.</p>
 
   <script>
     window.onload = function() {
       var emulator = new V86({
-        // Path to v86 WebAssembly binary hosted on CDN
+        // Path to v86 WebAssembly binary
         wasm_path: "https://unpkg.com/v86/build/v86.wasm",
         
-        // RAM allocated to the VM (in Bytes: 128MB = 128 * 1024 * 1024)
-        memory_size: 128 * 1024 * 1024,
-        vga_memory_size: 8 * 1024 * 1024,
+        // Memory config (64MB is plenty for DOS)
+        memory_size: 64 * 1024 * 1024,
+        vga_memory_size: 4 * 1024 * 1024,
         
-        // Target container for visual output
+        // Screen rendering container
         screen_container: document.getElementById("screen_container"),
         
-        // BIOS files loaded directly from CDN
+        // System BIOS files loaded from CDN
         bios: {
           url: "https://unpkg.com/v86/bios/seabios.bin",
         },
@@ -57,9 +75,9 @@
           url: "https://unpkg.com/v86/bios/vgabios.bin",
         },
         
-        // Path to your disk image (relative to index.html)
-        hda: {
-          url: "./windows98.img",
+        // Path to your extracted FreeDOS disk image
+        fda: {
+          url: "./freedos.img",
         },
         
         autostart: true,
