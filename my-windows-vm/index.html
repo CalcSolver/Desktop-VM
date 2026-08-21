@@ -41,7 +41,6 @@
       color: #aaa;
     }
   </style>
-  <!-- Load v86 emulator core from CDN -->
   <script src="https://unpkg.com/v86/build/libv86.js"></script>
 </head>
 <body>
@@ -49,25 +48,18 @@
   <h1>FreeDOS WebAssembly VM</h1>
   
   <div id="screen_container">
-    <div style="white-space: pre; font-family: monospace; padding: 20px; color: #00ff00;">Initializing FreeDOS...</div>
+    <div style="white-space: pre; font-family: monospace; padding: 20px; color: #00ff00;">Booting FreeDOS...</div>
   </div>
 
-  <p class="instructions">Click inside the screen to capture mouse and keyboard input.</p>
+  <p class="instructions">Click inside the screen to control the VM.</p>
 
   <script>
     window.onload = function() {
       var emulator = new V86({
-        // Path to v86 WebAssembly binary
         wasm_path: "https://unpkg.com/v86/build/v86.wasm",
-        
-        // Memory config (64MB is plenty for DOS)
         memory_size: 64 * 1024 * 1024,
         vga_memory_size: 4 * 1024 * 1024,
-        
-        // Screen rendering container
         screen_container: document.getElementById("screen_container"),
-        
-        // System BIOS files loaded from CDN
         bios: {
           url: "https://unpkg.com/v86/bios/seabios.bin",
         },
@@ -75,9 +67,9 @@
           url: "https://unpkg.com/v86/bios/vgabios.bin",
         },
         
-        // Path to your extracted FreeDOS disk image
+        // Loads lightweight FreeDOS floppy image directly from v86 repository
         fda: {
-          url: "./freedos.img",
+          url: "https://copy.sh/v86/images/freedos720.img",
         },
         
         autostart: true,
