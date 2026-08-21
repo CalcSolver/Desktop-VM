@@ -3,51 +3,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browser VM Test</title>
+  <title>FreeDOS WebAssembly VM</title>
   <style>
     body {
       margin: 0;
+      padding: 0;
       background-color: #121212;
-      color: #fff;
-      font-family: sans-serif;
+      color: #ffffff;
+      font-family: system-ui, -apple-system, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
     }
+
+    h1 {
+      margin-bottom: 16px;
+      font-size: 1.5rem;
+    }
+
     #screen_container {
-      border: 2px solid #333;
-      background: #000;
+      border: 2px solid #333333;
+      border-radius: 4px;
+      background: #000000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
       width: 640px;
       height: 400px;
     }
-    canvas { display: block; }
+
+    canvas {
+      display: block;
+    }
+
+    .instructions {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
 </head>
 <body>
 
-  <h1>Browser VM Test</h1>
+  <h1>FreeDOS WebAssembly VM</h1>
+  
   <div id="screen_container"></div>
+
+  <p class="instructions">Click inside the screen to capture keyboard controls.</p>
 
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       var emulator = new V86Starter({
-        wasm_path: "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm",
-        memory_size: 32 * 1024 * 1024,
-        vga_memory_size: 2 * 1024 * 1024,
+        // Local WebAssembly engine
+        wasm_path: "./v86.wasm",
+        memory_size: 64 * 1024 * 1024,
+        vga_memory_size: 4 * 1024 * 1024,
         screen_container: document.getElementById("screen_container"),
+        
+        // SeaBIOS files from CDN
         bios: {
           url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin",
         },
         vga_bios: {
           url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin",
         },
-        // Direct bootable test OS
-        bzimage: {
-          url: "https://cdn.jsdelivr.net/gh/copy/v86@master/images/buildroot-bzImage.bin",
+        
+        // Local FreeDOS disk image
+        fda: {
+          url: "./freedos722.img",
         },
+        
         autostart: true,
       });
     });
