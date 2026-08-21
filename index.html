@@ -29,12 +29,23 @@
       background: #000000;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       cursor: pointer;
-      width: 640px;
-      height: 400px;
+      position: relative;
     }
 
-    canvas {
+    #screen_container canvas {
       display: block;
+    }
+
+    #status {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #00ff00;
+      font-family: monospace;
+      font-size: 14px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 4px 8px;
+      pointer-events: none;
     }
 
     .instructions {
@@ -43,40 +54,52 @@
       color: #aaa;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
+  <!-- Main v86 Library -->
+  <script src="https://copy.sh/v86/build/libv86.js"></script>
 </head>
 <body>
 
   <h1>FreeDOS WebAssembly VM</h1>
   
-  <div id="screen_container"></div>
+  <div id="screen_container">
+    <div id="status">Loading VM engine...</div>
+  </div>
 
   <p class="instructions">Click inside the screen to capture keyboard controls.</p>
 
   <script>
-    window.addEventListener("DOMContentLoaded", function() {
-      var emulator = new V86Starter({
-        // Local WebAssembly engine
-        wasm_path: "./v86.wasm",
-        memory_size: 64 * 1024 * 1024,
-        vga_memory_size: 4 * 1024 * 1024,
-        screen_container: document.getElementById("screen_container"),
-        
-        // SeaBIOS files from CDN
-        bios: {
-          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin",
-        },
-        vga_bios: {
-          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin",
-        },
-        
-        // Local FreeDOS disk image
-        fda: {
-          url: "./freedos722.img",
-        },
-        
-        autostart: true,
-      });
+    window.addEventListener("load", function() {
+      var status = document.getElementById("status");
+
+      try {
+        var emulator = new V86Starter({
+          wasm_path: "https://copy.sh/v86/build/v86.wasm",
+          memory_size: 64 * 1024 * 1024,
+          vga_memory_size: 4 * 1024 * 1024,
+          screen_container: document.getElementById("screen_container"),
+          bios: {
+            url: "https://copy.sh/v86/bios/seabios.bin",
+          },
+          vga_bios: {
+            url: "https://copy.sh/v86/bios/vgabios.bin",
+          },
+          fda: {
+            url: "./freedos722.img",
+          },
+          autostart: true,
+        });
+
+        emulator.add_listener("emulator-ready", function() {
+          status.innerText = "Booting FreeDOS...";
+          setTimeout(function() {
+            status.style.display = "none";
+          }, 3000);
+        });
+
+      } catch (err) {
+        status.style.color = "#ff4444";
+        status.innerText = "Error: " + err.message;
+      }
     });
   </script>
 
