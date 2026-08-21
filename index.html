@@ -3,67 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FreeDOS WebAssembly VM</title>
+  <title>Browser VM Test</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
       background-color: #121212;
-      color: #ffffff;
-      font-family: system-ui, -apple-system, sans-serif;
+      color: #fff;
+      font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
     }
-
-    h1 {
-      margin-bottom: 16px;
-      font-size: 1.5rem;
-    }
-
     #screen_container {
-      border: 2px solid #333333;
-      border-radius: 4px;
-      background: #000000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      cursor: pointer;
+      border: 2px solid #333;
+      background: #000;
       width: 640px;
       height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
-
-    canvas {
-      display: block;
-    }
-
-    .instructions {
-      margin-top: 12px;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
+    canvas { display: block; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
 </head>
 <body>
 
-  <h1>FreeDOS WebAssembly VM</h1>
-  
-  <div id="screen_container">
-    <div id="loading" style="font-family: monospace; color: #00ff00;">Starting FreeDOS...</div>
-  </div>
-
-  <p class="instructions">Click inside the screen to capture mouse and keyboard controls.</p>
+  <h1>Browser VM Test</h1>
+  <div id="screen_container"></div>
 
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       var emulator = new V86Starter({
         wasm_path: "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm",
-        memory_size: 64 * 1024 * 1024,
-        vga_memory_size: 4 * 1024 * 1024,
+        memory_size: 32 * 1024 * 1024,
+        vga_memory_size: 2 * 1024 * 1024,
         screen_container: document.getElementById("screen_container"),
         bios: {
           url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin",
@@ -71,15 +44,11 @@
         vga_bios: {
           url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin",
         },
-        fda: {
-          url: "./freedos722.img",
+        // Direct bootable test OS
+        bzimage: {
+          url: "https://cdn.jsdelivr.net/gh/copy/v86@master/images/buildroot-bzImage.bin",
         },
         autostart: true,
-      });
-
-      emulator.add_listener("emulator-ready", function() {
-        var loadingElem = document.getElementById("loading");
-        if (loadingElem) loadingElem.style.display = "none";
       });
     });
   </script>
