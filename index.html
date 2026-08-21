@@ -2,60 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Windows 95 WebAssembly VM</title>
+  <title>Native WebAssembly VM</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #121212;
-      color: #ffffff;
-      font-family: system-ui, -apple-system, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    h1 {
-      margin-bottom: 16px;
-      font-size: 1.5rem;
-    }
-
-    .vm-container {
-      width: 800px;
-      height: 600px;
-      border: 2px solid #333333;
-      border-radius: 4px;
-      background: #000000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .vm-container iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .instructions {
-      margin-top: 12px;
-      font-size: 0.9rem;
-      color: #aaa;
-    }
+    body { margin: 0; background: #121212; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    #screen_container { border: 2px solid #333; background: #000; width: 640px; height: 400px; }
   </style>
+  <script src="./libv86.js"></script>
 </head>
 <body>
-
-  <h1>Windows 95 WebAssembly VM</h1>
-
-  <div class="vm-container">
-    <iframe src="https://copy.sh/v86/?profile=windows95" allowfullscreen></iframe>
-  </div>
-
-  <p class="instructions">Click inside the frame to capture mouse and keyboard controls.</p>
-
+  <div id="screen_container"></div>
+  <script>
+    window.addEventListener("DOMContentLoaded", function() {
+      new V86Starter({
+        wasm_path: "./v86.wasm",
+        memory_size: 64 * 1024 * 1024,
+        vga_memory_size: 4 * 1024 * 1024,
+        screen_container: document.getElementById("screen_container"),
+        bios: { url: "./seabios.bin" },
+        fda: { url: "./freedos722.img" },
+        autostart: true
+      });
+    });
+  </script>
 </body>
 </html>
