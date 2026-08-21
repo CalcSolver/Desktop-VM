@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FreeDOS WebAssembly VM</title>
+  <title>Windows 95 WebAssembly VM</title>
   <style>
     body {
       margin: 0;
@@ -23,25 +23,21 @@
       font-size: 1.5rem;
     }
 
-    /* Container crops out the controls bar */
     .vm-container {
-      width: 640px;
-      height: 280px;
-      overflow: hidden;
+      width: 800px;
+      height: 600px;
       border: 2px solid #333333;
       border-radius: 4px;
       background: #000000;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
       position: relative;
+      overflow: hidden;
     }
 
     .vm-container iframe {
-      width: 650px;
-      height: 420px;
+      width: 100%;
+      height: 100%;
       border: none;
-      position: absolute;
-      top: -130px;
-      left: 0;
     }
 
     .instructions {
@@ -53,13 +49,13 @@
 </head>
 <body>
 
-  <h1>FreeDOS WebAssembly VM</h1>
+  <h1>Windows 95 WebAssembly VM</h1>
 
   <div class="vm-container">
-    <iframe src="https://copy.sh/v86/?profile=freedos" allowfullscreen></iframe>
+    <iframe src="https://copy.sh/v86/?profile=windows95" allowfullscreen></iframe>
   </div>
 
-  <p class="instructions">Click inside the VM frame to start controlling FreeDOS.</p>
+  <p class="instructions">Click inside the frame to capture mouse and keyboard controls.</p>
 
 </body>
 </html>
