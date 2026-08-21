@@ -23,18 +23,13 @@
       font-size: 1.5rem;
     }
 
-    #screen_container {
+    iframe {
+      width: 640px;
+      height: 400px;
       border: 2px solid #333333;
       border-radius: 4px;
       background: #000000;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-      cursor: pointer;
-      width: 640px;
-      height: 400px;
-    }
-
-    canvas {
-      display: block;
     }
 
     .instructions {
@@ -43,33 +38,14 @@
       color: #aaa;
     }
   </style>
-  <script src="./libv86.js"></script>
 </head>
 <body>
 
   <h1>FreeDOS WebAssembly VM</h1>
-  
-  <div id="screen_container"></div>
 
-  <p class="instructions">Click inside the screen to capture keyboard controls.</p>
+  <iframe src="https://copy.sh/v86/?profile=freedos" allowfullscreen></iframe>
 
-  <script>
-    window.addEventListener("DOMContentLoaded", function() {
-      var emulator = new V86Starter({
-        wasm_path: "./v86.wasm",
-        memory_size: 64 * 1024 * 1024,
-        vga_memory_size: 4 * 1024 * 1024,
-        screen_container: document.getElementById("screen_container"),
-        bios: {
-          url: "./seabios.bin",
-        },
-        fda: {
-          url: "./freedos722.img",
-        },
-        autostart: true,
-      });
-    });
-  </script>
+  <p class="instructions">Click inside the VM frame to start controlling FreeDOS.</p>
 
 </body>
 </html>
