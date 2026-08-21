@@ -46,6 +46,7 @@
       background: rgba(0, 0, 0, 0.8);
       padding: 4px 8px;
       pointer-events: none;
+      z-index: 10;
     }
 
     .instructions {
@@ -54,7 +55,6 @@
       color: #aaa;
     }
   </style>
-  <!-- Main v86 Library -->
   <script src="https://copy.sh/v86/build/libv86.js"></script>
 </head>
 <body>
@@ -72,7 +72,10 @@
       var status = document.getElementById("status");
 
       try {
-        var emulator = new V86Starter({
+        // Detect whether the script loaded V86 or V86Starter
+        var VMConstructor = typeof V86 !== "undefined" ? V86 : V86Starter;
+
+        var emulator = new VMConstructor({
           wasm_path: "https://copy.sh/v86/build/v86.wasm",
           memory_size: 64 * 1024 * 1024,
           vga_memory_size: 4 * 1024 * 1024,
