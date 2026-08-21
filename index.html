@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Browser VM</title>
+  <title>FreeDOS WebAssembly VM</title>
   <style>
     body {
       margin: 0;
@@ -43,34 +43,29 @@
       color: #aaa;
     }
   </style>
-  <!-- Official v86 Build Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/v86@latest/build/libv86.js"></script>
+  <!-- Local v86 bundle -->
+  <script src="./libv86.js"></script>
 </head>
 <body>
 
-  <h1>WebAssembly Desktop VM</h1>
+  <h1>FreeDOS WebAssembly VM</h1>
   
   <div id="screen_container"></div>
 
-  <p class="instructions">Click inside the canvas to capture keyboard and mouse controls.</p>
+  <p class="instructions">Click inside the screen to capture keyboard controls.</p>
 
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      // jsDelivr serves proper CORS headers for GitHub Pages
       var emulator = new V86Starter({
-        wasm_path: "https://cdn.jsdelivr.net/npm/v86@latest/build/v86.wasm",
-        memory_size: 32 * 1024 * 1024,
-        vga_memory_size: 2 * 1024 * 1024,
+        wasm_path: "./v86.wasm",
+        memory_size: 64 * 1024 * 1024,
+        vga_memory_size: 4 * 1024 * 1024,
         screen_container: document.getElementById("screen_container"),
         bios: {
-          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/seabios.bin",
+          url: "./seabios.bin",
         },
-        vga_bios: {
-          url: "https://cdn.jsdelivr.net/npm/v86@latest/bios/vgabios.bin",
-        },
-        // Lightweight Linux kernel image hosted with CORS enabled
-        bzimage: {
-          url: "https://cdn.jsdelivr.net/gh/copy/v86@master/images/buildroot-bzImage.bin",
+        fda: {
+          url: "./freedos722.img",
         },
         autostart: true,
       });
